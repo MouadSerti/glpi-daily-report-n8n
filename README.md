@@ -1,0 +1,1 @@
+# glpi-daily-report-n8n
