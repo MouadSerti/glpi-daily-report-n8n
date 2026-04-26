@@ -1,0 +1,1535 @@
+{
+  "name": "GLPI - Rapport journalier (GitHub sanitized)",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        816,
+        1440
+      ],
+      "id": "b6b8cf37-8d46-4bf1-ad20-9d5eb5b478ab",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/initSession?session_write=true\"}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Authorization",
+              "value": "={{\"user_token \" + $env.GLPI_USER_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1040,
+        1440
+      ],
+      "id": "f89e048b-3ba4-41a1-ba8c-2461a89c2a0b",
+      "name": "InitSession"
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/search/Group_Ticket\"}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "range",
+              "value": "0-100"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Session-Token",
+              "value": "={{$node[\"InitSession\"].json[\"session_token\"]}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1248,
+        2032
+      ],
+      "id": "8526a84b-b6bb-40f5-bf92-b4259deb38ad",
+      "name": "GET Équipes Support"
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/search/Ticket\"}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "criteria[0][field]",
+              "value": "12"
+            },
+            {
+              "name": "criteria[0][searchtype]",
+              "value": "equals"
+            },
+            {
+              "name": "criteria[0][value]",
+              "value": "2"
+            },
+            {
+              "name": "range",
+              "value": "0-0"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Session-Token",
+              "value": "={{$node[\"InitSession\"].json[\"session_token\"]}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1280,
+        864
+      ],
+      "id": "4866b1dc-f615-4973-88ac-276d6387bc0c",
+      "name": "LIST TICKET EN COURS"
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/search/Ticket\"}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "criteria[0][field]",
+              "value": "12"
+            },
+            {
+              "name": "criteria[0][searchtype]",
+              "value": "equals"
+            },
+            {
+              "name": "criteria[0][value]",
+              "value": "4"
+            },
+            {
+              "name": "range",
+              "value": "0-0"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Session-Token",
+              "value": "={{$node[\"InitSession\"].json[\"session_token\"]}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1264,
+        1472
+      ],
+      "id": "8dac58ea-0d66-4a7a-9b75-423ecfe890c0",
+      "name": "LIST TICKET EN ATTENT"
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/search/Ticket\"}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "criteria[0][field]",
+              "value": "12"
+            },
+            {
+              "name": "criteria[0][searchtype]",
+              "value": "equals"
+            },
+            {
+              "name": "criteria[0][value]",
+              "value": "3"
+            },
+            {
+              "name": "range",
+              "value": "0-0"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Session-Token",
+              "value": "={{$items(\"InitSession\")[0].json.session_token}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1296,
+        688
+      ],
+      "id": "67f8213b-08c6-4a67-8f1f-a822827679b8",
+      "name": "LIST TICKET AFFECTTE"
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/search/Ticket\"}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "criteria[0][field]",
+              "value": "12"
+            },
+            {
+              "name": "criteria[0][searchtype]",
+              "value": "equals"
+            },
+            {
+              "name": "criteria[0][value]",
+              "value": "5"
+            },
+            {
+              "name": "range",
+              "value": "0-0"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Session-Token",
+              "value": "={{$node[\"InitSession\"].json[\"session_token\"]}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1248,
+        1824
+      ],
+      "id": "139dd647-4470-4d36-8d7c-8e143f8ba4ba",
+      "name": "GET Tickets Résolus"
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/search/Ticket\"}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "criteria[0][field]",
+              "value": "3"
+            },
+            {
+              "name": "criteria[0][searchtype]",
+              "value": "equals"
+            },
+            {
+              "name": "criteria[0][value]",
+              "value": "5"
+            },
+            {
+              "name": "criteria[1][link]",
+              "value": "AND"
+            },
+            {
+              "name": "criteria[1][field]",
+              "value": "12"
+            },
+            {
+              "name": "criteria[1][searchtype]",
+              "value": "notequals"
+            },
+            {
+              "name": "criteria[1][value]",
+              "value": "6"
+            },
+            {
+              "name": "range",
+              "value": "0-0"
+            },
+            {
+              "name": "forcedisplay[0]",
+              "value": "2"
+            },
+            {
+              "name": "forcedisplay[1]",
+              "value": "1"
+            },
+            {
+              "name": "forcedisplay[2]",
+              "value": "15"
+            },
+            {
+              "name": "forcedisplay[3]",
+              "value": "3"
+            },
+            {
+              "name": "forcedisplay[4]",
+              "value": "10"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Session-Token",
+              "value": "={{$node[\"InitSession\"].json[\"session_token\"]}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1296,
+        528
+      ],
+      "id": "9fe3744a-5045-4b87-b40a-532be2f4d443",
+      "name": "GET Tickets Critiques"
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/search/Ticket\"}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "criteria[0][field]",
+              "value": "82"
+            },
+            {
+              "name": "criteria[0][searchtype]",
+              "value": "equals"
+            },
+            {
+              "name": "criteria[0][value]",
+              "value": "1"
+            },
+            {
+              "name": "criteria[1][link]",
+              "value": "AND"
+            },
+            {
+              "name": "criteria[1][field]",
+              "value": "12"
+            },
+            {
+              "name": "criteria[1][searchtype]",
+              "value": "notequals"
+            },
+            {
+              "name": "criteria[1][value]",
+              "value": "6"
+            },
+            {
+              "name": "range",
+              "value": "0-100"
+            },
+            {
+              "name": "forcedisplay[0]",
+              "value": "2"
+            },
+            {
+              "name": "forcedisplay[1]",
+              "value": "1"
+            },
+            {
+              "name": "forcedisplay[2]",
+              "value": "15"
+            },
+            {
+              "name": "forcedisplay[3]",
+              "value": "3"
+            },
+            {
+              "name": "forcedisplay[4]",
+              "value": "10"
+            },
+            {
+              "name": "forcedisplay[5]",
+              "value": "18"
+            },
+            {
+              "name": "forcedisplay[6]",
+              "value": "16"
+            },
+            {
+              "name": "forcedisplay[7]",
+              "value": "17"
+            },
+            {
+              "name": "forcedisplay[8]",
+              "value": "82"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Session-Token",
+              "value": "={{$node[\"InitSession\"].json[\"session_token\"]}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1280,
+        1056
+      ],
+      "id": "d8aa521f-3167-4ad0-bd85-243afb25ae27",
+      "name": "GET Tickets SLA Dépassés"
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/search/Ticket\"}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "criteria[0][field]",
+              "value": "12"
+            },
+            {
+              "name": "criteria[0][searchtype]",
+              "value": "equals"
+            },
+            {
+              "name": "criteria[0][value]",
+              "value": "3"
+            },
+            {
+              "name": "range",
+              "value": "0-200"
+            },
+            {
+              "name": "forcedisplay[2]",
+              "value": "5"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Session-Token",
+              "value": "={{$items(\"InitSession\")[0].json.session_token}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1280,
+        1280
+      ],
+      "id": "c217f233-23f3-4185-bd90-00eff20e4e3c",
+      "name": "LIST TICKET AFFECTTE PAR USER"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2016,
+        736
+      ],
+      "id": "2c300595-980b-4026-8ffa-876d2a7c50dd",
+      "name": "Merge Stats"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * AGRÉGER STATISTIQUES + TABLEAU TECHNICIENS (AFFECTÉS)\n * - Compatible data = [{...}] ou data = [[...]]\n * - Ignore data = [[],[],...]\n * - Statut = champ 12 (2=en cours,3=en attente,4=affecté,5=résolu)  <-- ajustable\n * - SLA late = champ 82 (1 = late)\n * - Technicien = champ 5 (null | id number | [ids])\n * - Map id -> \"prenom nom\" via items users {id, firstname, realname}\n */\n\nfunction toInt(v, def = 0) {\n  if (v === null || v === undefined || v === \"\") return def;\n  if (typeof v === \"number\") return Number.isFinite(v) ? v : def;\n  const n = parseInt(String(v), 10);\n  return Number.isFinite(n) ? n : def;\n}\n\nfunction buildUserMap(allItems) {\n  const map = {};\n  for (const it of allItems) {\n    const j = it?.json;\n    // objets user typiques\n    if (j && j.id != null && j.totalcount == null) {\n      const first = String(j.firstname ?? \"\").trim();\n      const last  = String(j.realname ?? \"\").trim();\n      const full = `${first} ${last}`.trim();\n      // IMPORTANT: même si full vide, on garde fallback id (sinon resolveName échoue)\n      map[String(j.id)] = full || String(j.id);\n    }\n  }\n  return map;\n}\n\nfunction normalizeTechKeys(raw) {\n  if (raw == null) return [];\n  if (Array.isArray(raw)) return raw.map(x => String(x).trim()).filter(Boolean);\n  if (typeof raw === \"number\") return [String(raw)];\n  const s = String(raw).trim();\n  if (!s) return [];\n  if (s.includes(\",\")) return s.split(\",\").map(x => x.trim()).filter(Boolean);\n  return [s];\n}\n\nfunction getField(row, keyNum) {\n  if (row == null) return null;\n  if (Array.isArray(row)) return row[keyNum] ?? null;\n  return row[String(keyNum)] ?? row[keyNum] ?? null;\n}\n\nfunction isValidRow(row) {\n  if (!row) return false;\n  if (Array.isArray(row)) return row.length > 0;\n  return Object.keys(row).length > 0;\n}\n\n// Statuts GLPI (selon ton flux)\nfunction statusFromCode(code) {\n  const c = toInt(code, null);\n  if (c === 2) return \"EN_COURS\";\n  if (c === 3) return \"EN_ATTENTE\";\n  if (c === 4) return \"AFFECTE\";\n  if (c === 5) return \"RESOLU\";\n  return \"UNKNOWN\";\n}\n\nfunction scoreTraitement(ticketsAffectes, slaLate) {\n  if (!ticketsAffectes) return 0;\n  const rate = slaLate / ticketsAffectes;\n  const score = 100 - (rate * 100);\n  return Math.round(score * 10) / 10;\n}\n\nconst items = $input.all() ?? [];\nconst userMap = buildUserMap(items);\n\nfunction resolveName(id) {\n  const k = String(id);\n  return userMap[k] || k;\n}\n\nconst today = new Date();\nconst dateISO = today.toISOString().slice(0, 10);\n\n// Statuts\nlet enCours = 0, enAttente = 0, affectes = 0, resolus = 0;\nlet totalTickets = 0;\n\n// Table techniciens (AFFECTE seulement)\nconst tech = {}; // { \"id\": { ticketsAffectes, slaLate } }\n\nconst notes = [];\nconst unknownStatusCodes = new Set();\n\nfor (const it of items) {\n  const j = it?.json ?? {};\n\n  // ✅ On ne traite que les réponses \"search/Ticket\"\n  if (j.totalcount == null || !Array.isArray(j.data)) continue;\n\n  // ✅ Compter seulement si on a au moins une ligne valide (sinon data=[[],[],..] => on skip)\n  const validRows = j.data.filter(isValidRow);\n  if (validRows.length === 0) continue;\n\n  // ✅ Ici: on calcule le statut en comptant les codes présents dans les lignes\n  // (au lieu de prendre seulement la première ligne)\n  const statusCounts = { EN_COURS: 0, EN_ATTENTE: 0, AFFECTE: 0, RESOLU: 0, UNKNOWN: 0 };\n\n  for (const row of validRows) {\n    const st = statusFromCode(getField(row, 12));\n    statusCounts[st] = (statusCounts[st] || 0) + 1;\n    if (st === \"UNKNOWN\") unknownStatusCodes.add(String(getField(row, 12)));\n  }\n\n  // ✅ si ta requête est bien filtrée par statut, alors toutes les lignes ont le même statut.\n  // On prend donc le statut majoritaire:\n  const majorStatus = Object.entries(statusCounts)\n    .sort((a, b) => b[1] - a[1])[0]?.[0] || \"UNKNOWN\";\n\n  const count = toInt(j.totalcount, 0);\n\n  // ✅ totalTickets = somme des tickets de ce bloc (pas users/session_token)\n  totalTickets += count;\n\n  if (majorStatus === \"EN_COURS\") enCours += count;\n  else if (majorStatus === \"EN_ATTENTE\") enAttente += count;\n  else if (majorStatus === \"AFFECTE\") affectes += count;\n  else if (majorStatus === \"RESOLU\") resolus += count;\n\n  // ✅ Si c’est la branche AFFECTE : compter par technicien depuis toutes les lignes valides\n  if (majorStatus === \"AFFECTE\") {\n    for (const row of validRows) {\n      const techRaw = getField(row, 5);\n      const isLate = toInt(getField(row, 82) ?? row.is_late, 0);\n\n      const techIds = normalizeTechKeys(techRaw);\n      for (const id of techIds) {\n        const key = String(id);\n        if (!tech[key]) tech[key] = { ticketsAffectes: 0, slaLate: 0 };\n        tech[key].ticketsAffectes += 1;\n        if (isLate === 1) tech[key].slaLate += 1;\n      }\n    }\n  }\n}\n\n// construire la liste finale\nconst techniciensStats = Object.entries(tech)\n  .map(([id, v]) => {\n    const tA = toInt(v.ticketsAffectes, 0);\n    const late = toInt(v.slaLate, 0);\n    return {\n      technicien: resolveName(id),\n      technicienId: String(id),         // ✅ utile debug\n      ticketsAffectes: tA,\n      slaLate: late,\n      scoreTraitement: scoreTraitement(tA, late),\n    };\n  })\n  .filter(x => x.ticketsAffectes > 0)\n  .sort((a, b) => b.ticketsAffectes - a.ticketsAffectes);\n\nif (unknownStatusCodes.size) {\n  notes.push(`Statuts inconnus détectés (champ 12): ${Array.from(unknownStatusCodes).join(\", \")}. Ajustez statusFromCode().`);\n}\nif (Object.keys(userMap).length === 0) {\n  notes.push(\"Aucun mapping utilisateurs trouvé: certains techniciens resteront en IDs.\");\n}\nif (techniciensStats.length === 0) {\n  notes.push(\"Aucun technicien trouvé dans les tickets AFFECTE (vérifiez que data contient bien le champ 5).\");\n}\n\nreturn [\n  {\n    json: {\n      date: dateISO,\n      statut: { enCours, enAttente, affectes, resolus },\n      totalTickets,\n      techniciensStats,\n      notes,\n    },\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2512,
+        832
+      ],
+      "id": "8b9bbd14-2edf-45b6-9a9d-291446a8fff6",
+      "name": "Agréger Statistiques"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Analyse des tickets par technicien (robuste)\n// - Tickets affectés (statut = Affecté)\n// - Tickets SLA dépassés (is_late = 1)\n// ⚠️ Selon votre configuration GLPI, l'assignee peut être \"users_id_assign\" (souvent via un champ/forcedisplay).\n// Ici on s'appuie sur votre forcedisplay[2]=5 existant dans \"LIST TICKET AFFECTTE PAR USER\".\n\nconst ticketsAffectes = $node[\"LIST TICKET AFFECTTE PAR USER\"]?.json?.data || [];\nconst ticketsSLALate  = $node[\"GET Tickets SLA Dépassés\"]?.json?.data || [];\n\nconst stats = {};\n\nfunction extractAssigneeIdAndName(ticket) {\n  const assignee = ticket[\"5\"];\n  let techId = \"non-affecte\";\n  let techName = \"Non affecté\";\n\n  if (assignee && typeof assignee === \"object\") {\n    techId = assignee.id ?? assignee[\"id\"] ?? \"unknown\";\n    techName = assignee.name ?? assignee.text ?? assignee[\"name\"] ?? \"Technicien\";\n  } else if (assignee) {\n    techId = String(assignee);\n    techName = String(assignee);\n  }\n  return { techId, techName };\n}\n\nfor (const t of ticketsAffectes) {\n  const { techId, techName } = extractAssigneeIdAndName(t);\n  if (!stats[techId]) {\n    stats[techId] = { id: techId, nom: techName, ticketsAffectes: 0, ticketsSLADepasses: 0 };\n  }\n  stats[techId].ticketsAffectes += 1;\n}\n\n// SLA dépassés par technicien\nfor (const t of ticketsSLALate) {\n  const { techId } = extractAssigneeIdAndName(t);\n  if (stats[techId]) stats[techId].ticketsSLADepasses += 1;\n}\n\n// KPI simple\nconst result = Object.values(stats).map(tech => {\n  const tauxSLADepasses = tech.ticketsAffectes > 0 ? (tech.ticketsSLADepasses / tech.ticketsAffectes) * 100 : 0;\n\n  let score = 100;\n  score -= tech.ticketsSLADepasses * 12; // pénalité\n  if (tauxSLADepasses < 5) score += 10;\n  else if (tauxSLADepasses < 10) score += 5;\n\n  score = Math.max(0, Math.min(100, Math.round(score)));\n\n  let evaluation = \"Excellent\";\n  if (score < 60) evaluation = \"À améliorer\";\n  else if (score < 75) evaluation = \"Moyen\";\n  else if (score < 90) evaluation = \"Bon\";\n\n  const chargeTravail =\n    tech.ticketsAffectes < 10 ? \"Légère\" :\n    tech.ticketsAffectes < 20 ? \"Modérée\" :\n    tech.ticketsAffectes < 30 ? \"Élevée\" : \"Très élevée\";\n\n  return {\n    ...tech,\n    tauxSLADepasses: tauxSLADepasses.toFixed(1) + \"%\",\n    scorePerformance: score,\n    evaluation,\n    chargeTravail\n  };\n}).sort((a,b)=> b.scorePerformance - a.scorePerformance);\n\nreturn [{ json: { statsTechniciens: result, totalTechniciens: result.length } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        1024
+      ],
+      "id": "b6191517-5de0-4c40-bdee-fa21d4cc7503",
+      "name": "Analyser Techniciens"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * GÉNÉRER RAPPORT GLPI - VERSION TABLEAU HORIZONTAL\n * Style compact, professionnel, orienté rapport\n * Compatible n8n\n */\n\nconst items = $input.all() ?? [];\n\nfunction esc(s) {\n  return String(s ?? \"\")\n    .replaceAll(\"&\", \"&amp;\")\n    .replaceAll(\"<\", \"&lt;\")\n    .replaceAll(\">\", \"&gt;\")\n    .replaceAll('\"', \"&quot;\")\n    .replaceAll(\"'\", \"&#039;\");\n}\n\nfunction toInt(v, def = 0) {\n  const n = typeof v === \"number\" ? v : parseInt(String(v ?? \"\"), 10);\n  return Number.isFinite(n) ? n : def;\n}\n\nfunction safeArr(v) {\n  return Array.isArray(v) ? v : [];\n}\n\nfunction pickFirst(predicate) {\n  return items.find(i => {\n    try {\n      return predicate(i?.json ?? {});\n    } catch {\n      return false;\n    }\n  })?.json ?? null;\n}\n\nfunction formatNumber(n) {\n  return new Intl.NumberFormat(\"fr-FR\").format(toInt(n, 0));\n}\n\nfunction percent(value, total) {\n  if (!total) return 0;\n  return Math.round((value / total) * 1000) / 10;\n}\n\nfunction scoreClass(score) {\n  if (score >= 90) return \"good\";\n  if (score >= 60) return \"medium\";\n  return \"bad\";\n}\n\n// --------------------------------------------------\n// 1) RÉCUPÉRATION DES DONNÉES\n// --------------------------------------------------\n\nconst aggregateItem =\n  pickFirst(j =>\n    j.date ||\n    j.totalTickets ||\n    j.notes ||\n    j.statut ||\n    j.slaDepasses ||\n    j.backlogPlus7j\n  ) || {};\n\nconst dateISO = aggregateItem.date || new Date().toISOString().slice(0, 10);\nconst notes = safeArr(aggregateItem.notes);\n\nconst statutItem =\n  (aggregateItem.statut ? aggregateItem.statut : null) ||\n  pickFirst(j =>\n    \"enCours\" in j ||\n    \"enAttente\" in j ||\n    \"affectes\" in j ||\n    \"resolus\" in j\n  ) ||\n  {};\n\nconst statut = {\n  enCours: toInt(statutItem.enCours, 0),\n  enAttente: toInt(statutItem.enAttente, 0),\n  affectes: toInt(statutItem.affectes, 0),\n  resolus: toInt(statutItem.resolus, 0),\n};\n\nconst totalTickets =\n  toInt(aggregateItem.totalTickets, 0) ||\n  (statut.enCours + statut.enAttente + statut.affectes + statut.resolus);\n\n// SLA\nconst slaItem =\n  pickFirst(j => \"slaDepasses\" in j) ||\n  pickFirst(j => \"ticketsSLADepasses\" in j) ||\n  pickFirst(j => \"count\" in j && \"data\" in j) ||\n  {};\n\nlet slaDepasses = toInt(aggregateItem.slaDepasses, NaN);\nif (!Number.isFinite(slaDepasses)) slaDepasses = toInt(slaItem.slaDepasses, NaN);\nif (!Number.isFinite(slaDepasses)) slaDepasses = toInt(slaItem.ticketsSLADepasses, NaN);\nif (!Number.isFinite(slaDepasses) && Array.isArray(slaItem.data)) slaDepasses = toInt(slaItem.count, 0);\nif (!Number.isFinite(slaDepasses)) slaDepasses = 0;\n\n// backlog\nconst backlogItem =\n  pickFirst(j => \"backlogPlus7j\" in j) ||\n  pickFirst(j => \"backlog7j\" in j) ||\n  pickFirst(j => \"anciensTickets\" in j) ||\n  {};\n\nlet backlogPlus7j = toInt(aggregateItem.backlogPlus7j, NaN);\nif (!Number.isFinite(backlogPlus7j)) backlogPlus7j = toInt(backlogItem.backlogPlus7j, NaN);\nif (!Number.isFinite(backlogPlus7j)) backlogPlus7j = toInt(backlogItem.backlog7j, NaN);\nif (!Number.isFinite(backlogPlus7j)) backlogPlus7j = toInt(backlogItem.anciensTickets, 0);\n\n// techniciens\nconst statsTechItem = pickFirst(j => Array.isArray(j.statsTechniciens));\nconst techStatsItem = pickFirst(j => Array.isArray(j.techniciensStats));\n\nconst flatTechItems = items\n  .map(i => i.json || {})\n  .filter(j => \"ticketsAffectes\" in j && (\"nom\" in j || \"id\" in j || \"technicien\" in j));\n\nlet rawTechniciens = [];\n\nif (statsTechItem?.statsTechniciens) {\n  rawTechniciens = statsTechItem.statsTechniciens;\n} else if (techStatsItem?.techniciensStats) {\n  rawTechniciens = techStatsItem.techniciensStats;\n} else if (flatTechItems.length) {\n  rawTechniciens = flatTechItems;\n}\n\nconst techRows = rawTechniciens\n  .map(t => ({\n    technicien:\n      t.fullName ||\n      t.technicien ||\n      t.nom ||\n      `${t.firstname ?? \"\"} ${t.realname ?? \"\"}`.trim() ||\n      `ID ${t.id ?? t.technicienId ?? \"\"}`,\n    technicienId: t.id ?? t.technicienId ?? \"\",\n    ticketsAffectes: toInt(t.ticketsAffectes, 0),\n    slaLate: toInt(t.slaLate ?? t.ticketsSLADepasses, 0),\n    scoreTraitement: toInt(t.scoreTraitement ?? t.scorePerformance, 0),\n  }))\n  .filter(t => t.ticketsAffectes > 0)\n  .sort((a, b) => b.ticketsAffectes - a.ticketsAffectes);\n\n// --------------------------------------------------\n// 2) CALCULS\n// --------------------------------------------------\n\nconst resolus = statut.resolus;\nconst affectes = statut.affectes;\nconst enCours = statut.enCours;\nconst enAttente = statut.enAttente;\nconst ticketsNonResolus = affectes + enCours + enAttente;\n\nconst tauxResolution = percent(resolus, totalTickets);\nconst tauxSLA = totalTickets\n  ? Math.round(((totalTickets - slaDepasses) / totalTickets) * 1000) / 10\n  : 0;\n\n// --------------------------------------------------\n// 3) BLOCS HTML\n// --------------------------------------------------\n\nfunction topIndicatorsTable() {\n  return `\n    <div class=\"section-card\">\n      <div class=\"section-title\">Indicateurs clés</div>\n      <table class=\"kpi-table\">\n        <thead>\n          <tr>\n            <th>Total tickets</th>\n            <th>Tickets résolus</th>\n            <th>Tickets non résolus</th>\n            <th>SLA dépassés</th>\n            <th>Backlog &gt; 7 jours</th>\n            <th>Techniciens actifs</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr>\n            <td>\n              <div class=\"kpi-number\">${formatNumber(totalTickets)}</div>\n              <div class=\"kpi-sub\">Volume global</div>\n            </td>\n            <td>\n              <div class=\"kpi-number\">${formatNumber(resolus)}</div>\n              <div class=\"kpi-sub\">Taux : ${tauxResolution}%</div>\n            </td>\n            <td>\n              <div class=\"kpi-number\">${formatNumber(ticketsNonResolus)}</div>\n              <div class=\"kpi-sub\">À suivre</div>\n            </td>\n            <td>\n              <div class=\"kpi-number\">${formatNumber(slaDepasses)}</div>\n              <div class=\"kpi-sub\">Conformité : ${tauxSLA}%</div>\n            </td>\n            <td>\n              <div class=\"kpi-number\">${formatNumber(backlogPlus7j)}</div>\n              <div class=\"kpi-sub\">Ancienneté</div>\n            </td>\n            <td>\n              <div class=\"kpi-number\">${formatNumber(techRows.length)}</div>\n              <div class=\"kpi-sub\">Avec tickets</div>\n            </td>\n          </tr>\n        </tbody>\n      </table>\n    </div>\n  `;\n}\n\nfunction nonResolvedTable() {\n  return `\n    <div class=\"section-card section-small\">\n      <div class=\"section-title\">Situation des tickets non résolus</div>\n      <table class=\"simple-table compact-table narrow-table\">\n        <thead>\n          <tr>\n            <th>Statut</th>\n            <th style=\"text-align:right;\">Nombre</th>\n            <th style=\"text-align:right;\">Part des non résolus</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr>\n            <td>Tickets affectés</td>\n            <td style=\"text-align:right;\"><strong>${formatNumber(affectes)}</strong></td>\n            <td style=\"text-align:right;\">${percent(affectes, ticketsNonResolus)}%</td>\n          </tr>\n          <tr>\n            <td>Tickets en cours</td>\n            <td style=\"text-align:right;\"><strong>${formatNumber(enCours)}</strong></td>\n            <td style=\"text-align:right;\">${percent(enCours, ticketsNonResolus)}%</td>\n          </tr>\n          <tr>\n            <td>Tickets en attente</td>\n            <td style=\"text-align:right;\"><strong>${formatNumber(enAttente)}</strong></td>\n            <td style=\"text-align:right;\">${percent(enAttente, ticketsNonResolus)}%</td>\n          </tr>\n          <tr class=\"total-row\">\n            <td>Total non résolus</td>\n            <td style=\"text-align:right;\"><strong>${formatNumber(ticketsNonResolus)}</strong></td>\n            <td style=\"text-align:right;\">100%</td>\n          </tr>\n        </tbody>\n      </table>\n    </div>\n  `;\n}\n\nfunction techTable(rows) {\n  return `\n    <div class=\"section-card section-small\">\n      <div class=\"section-title\">Tickets affectés par technicien</div>\n      <div class=\"section-subtitle\">Vue synthétique de la répartition de charge et du niveau de traitement.</div>\n\n      ${\n        rows.length\n          ? `\n          <div class=\"table-wrap limited\">\n            <table class=\"simple-table\">\n              <thead>\n                <tr>\n                  <th>Technicien</th>\n                  <th style=\"text-align:right;\">Tickets</th>\n                  <th style=\"text-align:center;\">SLA late</th>\n                  <th style=\"text-align:right;\">Score</th>\n                </tr>\n              </thead>\n              <tbody>\n                ${rows.map(r => `\n                  <tr>\n                    <td class=\"tech-col\">${esc(r.technicien)}</td>\n                    <td style=\"text-align:right;\"><strong>${formatNumber(r.ticketsAffectes)}</strong></td>\n                    <td style=\"text-align:center;\">\n                      <span class=\"pill ${r.slaLate > 0 ? \"pill-danger\" : \"pill-ok\"}\">${formatNumber(r.slaLate)}</span>\n                    </td>\n                    <td style=\"text-align:right;\">\n                      <span class=\"score ${scoreClass(r.scoreTraitement)}\">${esc(r.scoreTraitement)}%</span>\n                    </td>\n                  </tr>\n                `).join(\"\")}\n              </tbody>\n            </table>\n          </div>\n        `\n          : `<div class=\"empty-box\">Aucun technicien avec ticket affecté pour cette journée.</div>`\n      }\n    </div>\n  `;\n}\n\nconst notesHtml = notes.length\n  ? `\n    <div class=\"notes-box\">\n      <div class=\"notes-title\">Notes</div>\n      <ul>\n        ${notes.map(n => `<li>${esc(n)}</li>`).join(\"\")}\n      </ul>\n    </div>\n  `\n  : \"\";\n\n// --------------------------------------------------\n// 4) HTML FINAL\n// --------------------------------------------------\n\nconst subject = `Rapport GLPI - ${dateISO} (Tickets: ${totalTickets})`;\n\nconst html = `\n<!DOCTYPE html>\n<html lang=\"fr\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n  <title>${esc(subject)}</title>\n  <style>\n    :root {\n      --bg: #f5f7fa;\n      --card: #ffffff;\n      --line: #e5e7eb;\n      --text: #1f2937;\n      --muted: #6b7280;\n      --primary: #1d4ed8;\n      --success-bg: #dcfce7;\n      --success-text: #166534;\n      --warn-bg: #fef3c7;\n      --warn-text: #92400e;\n      --danger-bg: #fee2e2;\n      --danger-text: #991b1b;\n      --shadow: 0 3px 10px rgba(15, 23, 42, 0.05);\n      --radius: 12px;\n    }\n\n    * { box-sizing: border-box; }\n\n    body {\n      margin: 0;\n      padding: 18px;\n      background: var(--bg);\n      color: var(--text);\n      font-family: Arial, Helvetica, sans-serif;\n    }\n\n    .container {\n      max-width: 1020px;\n      margin: 0 auto;\n    }\n\n    .hero {\n      background: var(--card);\n      border: 1px solid var(--line);\n      border-radius: 14px;\n      box-shadow: var(--shadow);\n      padding: 16px 18px;\n      margin-bottom: 12px;\n    }\n\n    .hero h1 {\n      margin: 0 0 6px;\n      font-size: 22px;\n      color: #111827;\n    }\n\n    .hero-meta {\n      font-size: 12px;\n      color: var(--muted);\n      margin-bottom: 10px;\n    }\n\n    .hero-desc {\n      margin: 0;\n      font-size: 13px;\n      line-height: 1.5;\n      color: #374151;\n    }\n\n    .hero-desc strong {\n      color: #111827;\n    }\n\n    .section-card {\n      background: var(--card);\n      border: 1px solid var(--line);\n      border-radius: var(--radius);\n      box-shadow: var(--shadow);\n      padding: 14px 16px;\n      margin-bottom: 12px;\n    }\n\n    .section-small {\n      padding: 13px 15px;\n    }\n\n    .section-title {\n      font-size: 15px;\n      font-weight: 700;\n      color: #111827;\n      margin-bottom: 8px;\n    }\n\n    .section-subtitle {\n      font-size: 12px;\n      color: var(--muted);\n      margin-bottom: 10px;\n    }\n\n    .kpi-table,\n    .simple-table {\n      width: 100%;\n      border-collapse: collapse;\n    }\n\n    .kpi-table thead th,\n    .simple-table thead th {\n      background: #fafafa;\n      color: var(--muted);\n      font-size: 11px;\n      text-transform: uppercase;\n      letter-spacing: .03em;\n      padding: 10px 10px;\n      border-bottom: 1px solid var(--line);\n      text-align: left;\n    }\n\n    .kpi-table tbody td,\n    .simple-table tbody td {\n      padding: 10px 10px;\n      border-bottom: 1px solid #f1f3f5;\n      vertical-align: middle;\n      font-size: 13px;\n    }\n\n    .kpi-number {\n      font-size: 20px;\n      font-weight: 700;\n      color: #111827;\n      line-height: 1.15;\n    }\n\n    .kpi-sub {\n      margin-top: 3px;\n      font-size: 11px;\n      color: var(--muted);\n    }\n\n    .compact-table {\n      max-width: 560px;\n    }\n\n    .narrow-table {\n      width: 100%;\n    }\n\n    .table-wrap.limited {\n      max-width: 760px;\n    }\n\n    .tech-col {\n      max-width: 260px;\n      white-space: nowrap;\n      overflow: hidden;\n      text-overflow: ellipsis;\n    }\n\n    .pill,\n    .score {\n      display: inline-block;\n      padding: 4px 8px;\n      border-radius: 999px;\n      font-size: 11px;\n      font-weight: 700;\n    }\n\n    .pill-ok {\n      background: var(--success-bg);\n      color: var(--success-text);\n    }\n\n    .pill-danger {\n      background: var(--danger-bg);\n      color: var(--danger-text);\n    }\n\n    .score.good {\n      background: var(--success-bg);\n      color: var(--success-text);\n    }\n\n    .score.medium {\n      background: var(--warn-bg);\n      color: var(--warn-text);\n    }\n\n    .score.bad {\n      background: var(--danger-bg);\n      color: var(--danger-text);\n    }\n\n    .total-row td {\n      background: #fafafa;\n      font-weight: 700;\n    }\n\n    .notes-box {\n      margin-top: 4px;\n      padding: 12px 14px;\n      border: 1px solid #f3e8b3;\n      background: #fffbea;\n      border-radius: 12px;\n    }\n\n    .notes-title {\n      font-size: 12px;\n      font-weight: 700;\n      color: #92400e;\n      margin-bottom: 6px;\n    }\n\n    .notes-box ul {\n      margin: 0;\n      padding-left: 18px;\n      font-size: 12px;\n      color: #78350f;\n      line-height: 1.4;\n    }\n\n    .empty-box {\n      background: #f9fafb;\n      border: 1px solid var(--line);\n      border-radius: 10px;\n      padding: 10px 12px;\n      font-size: 12px;\n      color: var(--muted);\n    }\n\n    .footer {\n      text-align: center;\n      color: var(--muted);\n      font-size: 11px;\n      margin-top: 8px;\n    }\n\n    @media (max-width: 860px) {\n      body { padding: 12px; }\n      .kpi-table,\n      .simple-table {\n        display: block;\n        overflow-x: auto;\n        white-space: nowrap;\n      }\n      .table-wrap.limited {\n        max-width: 100%;\n      }\n      .compact-table {\n        max-width: 100%;\n      }\n    }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n\n    <div class=\"hero\">\n      <h1>Rapport journalier GLPI</h1>\n      <div class=\"hero-meta\">Date du rapport : ${esc(dateISO)}</div>\n      <p class=\"hero-desc\">\n        Ce rapport présente une vue synthétique de la situation GLPI afin d’aider\n        les <strong>techniciens</strong> à poursuivre le traitement des tickets affectés,\n        tout en permettant à l’<strong>équipe support</strong> de suivre l’état global\n        des tickets, des délais SLA et de la répartition de charge.\n      </p>\n    </div>\n\n    ${topIndicatorsTable()}\n\n    ${nonResolvedTable()}\n\n    ${techTable(techRows)}\n\n    ${notesHtml}\n\n    <div class=\"footer\">Généré automatiquement par n8n</div>\n  </div>\n</body>\n</html>\n`;\n\nconst text = `\nRapport GLPI - ${dateISO}\n\nCe rapport présente une vue synthétique de la situation GLPI afin d’aider les techniciens à poursuivre le traitement des tickets affectés, tout en permettant à l’équipe support de suivre l’état global des tickets.\n\nTotal tickets: ${totalTickets}\nTickets résolus: ${resolus}\nTickets non résolus: ${ticketsNonResolus}\nSLA dépassés: ${slaDepasses}\nConformité SLA: ${tauxSLA}%\nBacklog > 7 jours: ${backlogPlus7j}\nTechniciens actifs: ${techRows.length}\n\nTechniciens:\n${techRows.map(t => `- ${t.technicien}: ${t.ticketsAffectes} ticket(s), SLA late ${t.slaLate}, score ${t.scoreTraitement}%`).join(\"\\n\")}\n`.trim();\n\nreturn [\n  {\n    json: {\n      subject,\n      html,\n      text,\n      date: dateISO,\n      statut,\n      totalTickets,\n      tauxResolution,\n      slaDepasses,\n      backlogPlus7j,\n      tauxSLA,\n      ticketsNonResolus,\n      techniciensCount: techRows.length,\n      techniciens: techRows\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2944,
+        912
+      ],
+      "id": "8f2349be-96e6-4789-bf33-d03008b93175",
+      "name": "Générer Rapport Complet"
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.REPORT_FROM_EMAIL}}",
+        "toEmail": "={{$env.REPORT_TO_EMAIL}}",
+        "subject": "=📊 Rapport Support GLPI -  {{ $json.subject }}",
+        "html": "={{$node[\"Générer Rapport Complet\"].json.html}}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        3168,
+        912
+      ],
+      "id": "07735352-f309-4dd4-82f0-3d50c2ab6d36",
+      "name": "Envoyer Rapport Email",
+      "webhookId": "4c9e4d3a-2651-49ec-863e-d30a1861c108",
+      "credentials": {
+        "smtp": {
+          "id": "__REPLACE_IN_N8N__",
+          "name": "__SELECT_CREDENTIAL__"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/killSession\"}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Session-Token",
+              "value": "={{$node[\"InitSession\"].json[\"session_token\"]}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        3392,
+        912
+      ],
+      "id": "9721fbdd-c4e4-449e-b4a4-f7514ac1ec86",
+      "name": "Fermer Session GLPI"
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/search/Ticket\"}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "criteria[0][field]",
+              "value": "15"
+            },
+            {
+              "name": "criteria[0][searchtype]",
+              "value": "lessthan"
+            },
+            {
+              "name": "criteria[0][value]",
+              "value": "=NOW-7DAYS"
+            },
+            {
+              "name": "criteria[1][link]",
+              "value": "AND"
+            },
+            {
+              "name": "criteria[1][field]",
+              "value": "12"
+            },
+            {
+              "name": "criteria[1][searchtype]",
+              "value": "notequals"
+            },
+            {
+              "name": "criteria[1][value]",
+              "value": "6"
+            },
+            {
+              "name": "range",
+              "value": "0-0"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Session-Token",
+              "value": "={{$node[\"InitSession\"].json[\"session_token\"]}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1248,
+        2208
+      ],
+      "id": "5848606d-2711-47b0-b434-dc8a68f81662",
+      "name": "GET Tickets Backlog >7j"
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/search/Ticket\"}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "criteria[0][field]",
+              "value": "10"
+            },
+            {
+              "name": "criteria[0][searchtype]",
+              "value": "equals"
+            },
+            {
+              "name": "criteria[0][value]",
+              "value": "4"
+            },
+            {
+              "name": "criteria[1][link]",
+              "value": "AND"
+            },
+            {
+              "name": "criteria[1][field]",
+              "value": "12"
+            },
+            {
+              "name": "criteria[1][searchtype]",
+              "value": "notequals"
+            },
+            {
+              "name": "criteria[1][value]",
+              "value": "6"
+            },
+            {
+              "name": "range",
+              "value": "0-0"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Session-Token",
+              "value": "={{$node[\"InitSession\"].json[\"session_token\"]}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1472,
+        1056
+      ],
+      "id": "fc55ec34-9d37-4d35-bfe4-d98e07d65328",
+      "name": "COUNT Urgence 4 (Haute)"
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/search/Ticket\"}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "criteria[0][field]",
+              "value": "10"
+            },
+            {
+              "name": "criteria[0][searchtype]",
+              "value": "equals"
+            },
+            {
+              "name": "criteria[0][value]",
+              "value": "3"
+            },
+            {
+              "name": "criteria[1][link]",
+              "value": "AND"
+            },
+            {
+              "name": "criteria[1][field]",
+              "value": "12"
+            },
+            {
+              "name": "criteria[1][searchtype]",
+              "value": "notequals"
+            },
+            {
+              "name": "criteria[1][value]",
+              "value": "6"
+            },
+            {
+              "name": "range",
+              "value": "0-0"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Session-Token",
+              "value": "={{$node[\"InitSession\"].json[\"session_token\"]}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1456,
+        1280
+      ],
+      "id": "43bf0fca-5c13-47c5-9dbc-db09eb3c67ce",
+      "name": "COUNT Urgence 3 (Moyenne)"
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/search/Ticket\"}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "criteria[0][field]",
+              "value": "3"
+            },
+            {
+              "name": "criteria[0][searchtype]",
+              "value": "equals"
+            },
+            {
+              "name": "criteria[0][value]",
+              "value": "5"
+            },
+            {
+              "name": "criteria[1][link]",
+              "value": "AND"
+            },
+            {
+              "name": "criteria[1][field]",
+              "value": "12"
+            },
+            {
+              "name": "criteria[1][searchtype]",
+              "value": "notequals"
+            },
+            {
+              "name": "criteria[1][value]",
+              "value": "6"
+            },
+            {
+              "name": "range",
+              "value": "0-0"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Session-Token",
+              "value": "={{$node[\"InitSession\"].json[\"session_token\"]}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1472,
+        1456
+      ],
+      "id": "1e262138-cffe-453e-9501-9d7cf0783c59",
+      "name": "COUNT Priorité 5 (Critique)"
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/search/Ticket\"}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "criteria[0][field]",
+              "value": "3"
+            },
+            {
+              "name": "criteria[0][searchtype]",
+              "value": "equals"
+            },
+            {
+              "name": "criteria[0][value]",
+              "value": "4"
+            },
+            {
+              "name": "criteria[1][link]",
+              "value": "AND"
+            },
+            {
+              "name": "criteria[1][field]",
+              "value": "12"
+            },
+            {
+              "name": "criteria[1][searchtype]",
+              "value": "notequals"
+            },
+            {
+              "name": "criteria[1][value]",
+              "value": "6"
+            },
+            {
+              "name": "range",
+              "value": "0-0"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Session-Token",
+              "value": "={{$node[\"InitSession\"].json[\"session_token\"]}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1456,
+        1760
+      ],
+      "id": "ff2dadc2-c70c-4159-9480-de940a8f07b0",
+      "name": "COUNT Priorité 4 (Haute)"
+    },
+    {
+      "parameters": {
+        "url": "={{$env.GLPI_BASE_URL + \"/apirest.php/User\"}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "criteria[0][field]",
+              "value": "=usercategories_id"
+            },
+            {
+              "name": "criteria[0][searchtype]",
+              "value": "=equals"
+            },
+            {
+              "name": "criteria[0][value]",
+              "value": "6"
+            },
+            {
+              "name": "range",
+              "value": "0-999"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "App-Token",
+              "value": "={{$env.GLPI_APP_TOKEN}}"
+            },
+            {
+              "name": "Session-Token",
+              "value": "={{$node[\"InitSession\"].json[\"session_token\"]}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1264,
+        1632
+      ],
+      "id": "58b5e8b7-a010-4fc3-bbd9-e6e438f8989c",
+      "name": "Trouver Groupe Support"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2720,
+        896
+      ],
+      "id": "2f1b7663-c0ec-41ba-8be0-9c54839512d3",
+      "name": "Merge Stats1"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2032,
+        944
+      ],
+      "id": "670a82e6-82b0-48bd-8c50-b232534d96d3",
+      "name": "Merge Stats2"
+    },
+    {
+      "parameters": {
+        "numberInputs": 10
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2032,
+        1120
+      ],
+      "id": "8784f695-87e1-4a94-a56a-061a45b62ced",
+      "name": "Merge Stats3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2224,
+        848
+      ],
+      "id": "de2a111d-437f-4470-ae1a-11b435b835ae",
+      "name": "Merge Stats4"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Analyse des tickets par technicien + jointure avec \"liste des profiles\"\nconst ticketsAffectes = $node[\"LIST TICKET AFFECTTE PAR USER\"]?.json?.data || [];\nconst ticketsSLALate  = $node[\"GET Tickets SLA Dépassés\"]?.json?.data || [];\n\n// récupérer tous les items du node \"liste des profiles\"\nconst profileItems = $items(\"liste des profiles\") || [];\n\n// construire une map des profils par id\nconst profilesMap = {};\n\nfor (const item of profileItems) {\n  const p = item.json || {};\n  const id = String(p.id ?? \"\").trim();\n  if (!id) continue;\n\n  const firstname = String(p.firstname ?? \"\").trim();\n  const realname = String(p.realname ?? \"\").trim();\n  const fullName = `${firstname} ${realname}`.trim();\n\n  profilesMap[id] = {\n    firstname,\n    realname,\n    fullName\n  };\n}\n\nconst stats = {};\n\nfunction extractAssigneeId(ticket) {\n  const assignee = ticket[\"5\"];\n\n  if (!assignee) return \"non-affecte\";\n\n  if (typeof assignee === \"object\") {\n    return String(assignee.id ?? assignee[\"id\"] ?? \"non-affecte\");\n  }\n\n  return String(assignee);\n}\n\n// 1) Tickets affectés\nfor (const t of ticketsAffectes) {\n  const techId = extractAssigneeId(t);\n\n  if (!stats[techId]) {\n    stats[techId] = {\n      id: techId,\n      nom: techId === \"non-affecte\" ? \"Non affecté\" : techId,\n      ticketsAffectes: 0,\n      ticketsSLADepasses: 0\n    };\n  }\n\n  stats[techId].ticketsAffectes += 1;\n}\n\n// 2) Tickets SLA dépassés\nfor (const t of ticketsSLALate) {\n  const techId = extractAssigneeId(t);\n\n  if (!stats[techId]) {\n    stats[techId] = {\n      id: techId,\n      nom: techId === \"non-affecte\" ? \"Non affecté\" : techId,\n      ticketsAffectes: 0,\n      ticketsSLADepasses: 0\n    };\n  }\n\n  stats[techId].ticketsSLADepasses += 1;\n}\n\n// 3) Enrichissement + calcul KPI\nconst result = Object.values(stats).map(tech => {\n  const tauxSLADepasses =\n    tech.ticketsAffectes > 0\n      ? (tech.ticketsSLADepasses / tech.ticketsAffectes) * 100\n      : 0;\n\n  let score = 100;\n  score -= tech.ticketsSLADepasses * 12;\n\n  if (tauxSLADepasses < 5) score += 10;\n  else if (tauxSLADepasses < 10) score += 5;\n\n  score = Math.max(0, Math.min(100, Math.round(score)));\n\n  let evaluation = \"Excellent\";\n  if (score < 60) evaluation = \"À améliorer\";\n  else if (score < 75) evaluation = \"Moyen\";\n  else if (score < 90) evaluation = \"Bon\";\n\n  const chargeTravail =\n    tech.ticketsAffectes < 10 ? \"Légère\" :\n    tech.ticketsAffectes < 20 ? \"Modérée\" :\n    tech.ticketsAffectes < 30 ? \"Élevée\" : \"Très élevée\";\n\n  const profile = profilesMap[String(tech.id)] || null;\n\n  const firstname = profile?.firstname ?? \"\";\n  const realname = profile?.realname ?? \"\";\n  const fullName =\n    tech.id === \"non-affecte\"\n      ? \"Non affecté\"\n      : (profile?.fullName || tech.nom || `Technicien #${tech.id}`);\n\n  return {\n    id: tech.id,\n    nom: fullName,\n    firstname,\n    realname,\n    fullName,\n    ticketsAffectes: tech.ticketsAffectes,\n    ticketsSLADepasses: tech.ticketsSLADepasses,\n    tauxSLADepasses: tauxSLADepasses.toFixed(1) + \"%\",\n    scorePerformance: score,\n    evaluation,\n    chargeTravail\n  };\n})\n.sort((a, b) => b.ticketsAffectes - a.ticketsAffectes);\n\nreturn [\n  {\n    json: {\n      statsTechniciens: result,\n      totalTechniciens: result.length\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2544,
+        1008
+      ],
+      "id": "4be70dd2-5f55-427b-8d74-bb6785b8e1f0",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ✅ Ne dépend pas du node \"Config\" (donc OK même en \"Execute step\")\nconst wantedId = parseInt($json.wantedProfileId ?? 6, 10);\n\n// Input = liste des Profile_User (items)\nconst out = [];\n\nfor (const item of items) {\n  const r = item.json;\n  if (!r) continue;\n\n  const pid = parseInt(r.usercategories_id, 10);\n  if (pid === wantedId) {\n    out.push({\n      json: {\n        id:r.id,\n        realname:r.realname,\n        firstname:r.firstname,\n        users_id: r.users_id,\n        usercategories_id: r.usercategories_id,\n        entities_id: r.entities_id,\n      }\n    });\n  }\n}\n\n// ✅ Toujours retourner au moins 1 item pour ne pas stopper n8n\nif (out.length === 0) {\n  return [{ json: { info: `Aucun utilisateur trouvé pour usercategories_id = ${wantedId}` } }];\n}\n\nreturn out;\n"
+      },
+      "id": "b6493225-b9e9-4b22-a198-c2439a84aaee",
+      "name": "liste des profiles",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        1600
+      ]
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2384,
+        1152
+      ],
+      "id": "8dc43b0c-6eea-4440-bdde-182e241bda93",
+      "name": "Merge Stats5"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * GÉNÉRER RAPPORT GLPI\n * Version robuste\n * Supporte plusieurs formats en entrée :\n * - { date, statut, totalTickets, notes, slaDepasses, backlogPlus7j }\n * - { statsTechniciens: [...] }\n * - items séparés : { id, nom, ticketsAffectes, ... }\n * - { enCours, enAttente, affectes, resolus }\n */\n\nconst items = $input.all() ?? [];\n\nfunction esc(s) {\n  return String(s ?? \"\")\n    .replaceAll(\"&\", \"&amp;\")\n    .replaceAll(\"<\", \"&lt;\")\n    .replaceAll(\">\", \"&gt;\")\n    .replaceAll('\"', \"&quot;\")\n    .replaceAll(\"'\", \"&#039;\");\n}\n\nfunction toInt(v, def = 0) {\n  const n = typeof v === \"number\" ? v : parseInt(String(v ?? \"\"), 10);\n  return Number.isFinite(n) ? n : def;\n}\n\nfunction safeArr(v) {\n  return Array.isArray(v) ? v : [];\n}\n\nfunction pickFirst(predicate) {\n  return items.find(i => {\n    try {\n      return predicate(i?.json ?? {});\n    } catch {\n      return false;\n    }\n  })?.json ?? null;\n}\n\n// --------------------------------------------------\n// 1) Récupération DATE / NOTES / TOTAL\n// --------------------------------------------------\n\nconst aggregateItem =\n  pickFirst(j =>\n    j.date ||\n    j.totalTickets ||\n    j.notes ||\n    j.statut ||\n    j.slaDepasses ||\n    j.backlogPlus7j\n  ) || {};\n\nconst dateISO = aggregateItem.date || new Date().toISOString().slice(0, 10);\nconst notes = safeArr(aggregateItem.notes);\n\n// --------------------------------------------------\n// 2) Récupération STATUT\n// --------------------------------------------------\n\nconst statutItem =\n  (aggregateItem.statut ? aggregateItem.statut : null) ||\n  pickFirst(j =>\n    \"enCours\" in j ||\n    \"enAttente\" in j ||\n    \"affectes\" in j ||\n    \"resolus\" in j\n  ) ||\n  {};\n\nconst statut = {\n  enCours: toInt(statutItem.enCours, 0),\n  enAttente: toInt(statutItem.enAttente, 0),\n  affectes: toInt(statutItem.affectes, 0),\n  resolus: toInt(statutItem.resolus, 0),\n};\n\n// Total tickets\nconst totalTickets =\n  toInt(aggregateItem.totalTickets, 0) ||\n  (statut.enCours + statut.enAttente + statut.affectes + statut.resolus);\n\n// --------------------------------------------------\n// 3) KPI supplémentaires\n// --------------------------------------------------\n\n// Cherche SLA dépassés\nconst slaItem =\n  pickFirst(j => \"slaDepasses\" in j) ||\n  pickFirst(j => \"ticketsSLADepasses\" in j) ||\n  pickFirst(j => \"count\" in j && \"data\" in j) ||\n  {};\n\nlet slaDepasses = toInt(aggregateItem.slaDepasses, NaN);\n\nif (!Number.isFinite(slaDepasses)) {\n  slaDepasses = toInt(slaItem.slaDepasses, NaN);\n}\n\nif (!Number.isFinite(slaDepasses)) {\n  slaDepasses = toInt(slaItem.ticketsSLADepasses, NaN);\n}\n\n// si node SLA renvoie un count\nif (!Number.isFinite(slaDepasses) && Array.isArray(slaItem.data)) {\n  slaDepasses = toInt(slaItem.count, 0);\n}\n\nif (!Number.isFinite(slaDepasses)) {\n  slaDepasses = 0;\n}\n\n// Cherche backlog > 7 jours\nconst backlogItem =\n  pickFirst(j => \"backlogPlus7j\" in j) ||\n  pickFirst(j => \"backlog7j\" in j) ||\n  pickFirst(j => \"anciensTickets\" in j) ||\n  {};\n\nlet backlogPlus7j = toInt(aggregateItem.backlogPlus7j, NaN);\n\nif (!Number.isFinite(backlogPlus7j)) {\n  backlogPlus7j = toInt(backlogItem.backlogPlus7j, NaN);\n}\n\nif (!Number.isFinite(backlogPlus7j)) {\n  backlogPlus7j = toInt(backlogItem.backlog7j, NaN);\n}\n\nif (!Number.isFinite(backlogPlus7j)) {\n  backlogPlus7j = toInt(backlogItem.anciensTickets, 0);\n}\n\n// --------------------------------------------------\n// 4) Récupération TECHNICIENS\n// --------------------------------------------------\n\nconst statsTechItem = pickFirst(j => Array.isArray(j.statsTechniciens));\nconst techStatsItem = pickFirst(j => Array.isArray(j.techniciensStats));\n\nconst flatTechItems = items\n  .map(i => i.json || {})\n  .filter(j => \"ticketsAffectes\" in j && (\"nom\" in j || \"id\" in j));\n\nlet rawTechniciens = [];\n\nif (statsTechItem?.statsTechniciens) {\n  rawTechniciens = statsTechItem.statsTechniciens;\n} else if (techStatsItem?.techniciensStats) {\n  rawTechniciens = techStatsItem.techniciensStats;\n} else if (flatTechItems.length) {\n  rawTechniciens = flatTechItems;\n}\n\nconst techRows = rawTechniciens\n  .map(t => ({\n    technicien:\n      t.fullName ||\n      t.technicien ||\n      t.nom ||\n      `${t.firstname ?? \"\"} ${t.realname ?? \"\"}`.trim() ||\n      `ID ${t.id ?? t.technicienId ?? \"\"}`,\n    technicienId: t.id ?? t.technicienId ?? \"\",\n    ticketsAffectes: toInt(t.ticketsAffectes, 0),\n    slaLate: toInt(t.slaLate ?? t.ticketsSLADepasses, 0),\n    scoreTraitement: toInt(t.scoreTraitement ?? t.scorePerformance, 0),\n    firstname: t.firstname ?? \"\",\n    realname: t.realname ?? \"\",\n    fullName: t.fullName ?? \"\"\n  }))\n  .filter(t => t.ticketsAffectes > 0)\n  .sort((a, b) => b.ticketsAffectes - a.ticketsAffectes);\n\n// --------------------------------------------------\n// 5) KPI principaux\n// --------------------------------------------------\n\nconst resolus = statut.resolus;\nconst affectes = statut.affectes;\nconst enCours = statut.enCours;\nconst enAttente = statut.enAttente;\n\nconst tauxResolution = totalTickets > 0\n  ? Math.round((resolus / totalTickets) * 1000) / 10\n  : 0;\n\n// --------------------------------------------------\n// 6) HTML helpers\n// --------------------------------------------------\n\nfunction kpiRow(label, value, hint = \"\") {\n  return `\n    <tr>\n      <td style=\"padding:6px 8px;border:1px solid #ddd;\">${esc(label)}</td>\n      <td style=\"padding:6px 8px;border:1px solid #ddd;text-align:right;\"><b>${esc(value)}</b></td>\n      <td style=\"padding:6px 8px;border:1px solid #ddd;color:#666;\">${esc(hint)}</td>\n    </tr>\n  `;\n}\n\nfunction techTable(rows) {\n  return `\n    <h3 style=\"margin:16px 0 8px;\">Tickets affectés par technicien — ${esc(dateISO)}</h3>\n    <table style=\"border-collapse:collapse;width:100%;font-size:13px;\">\n      <thead>\n        <tr style=\"background:#f8f9fa;\">\n          <th style=\"text-align:left;padding:6px 8px;border:1px solid #ddd;\">Technicien</th>\n          <th style=\"text-align:right;padding:6px 8px;border:1px solid #ddd;\">Tickets affectés</th>\n          <th style=\"text-align:right;padding:6px 8px;border:1px solid #ddd;\">SLA late</th>\n          <th style=\"text-align:right;padding:6px 8px;border:1px solid #ddd;\">Score traitement</th>\n        </tr>\n      </thead>\n      <tbody>\n        ${rows.map(r => `\n          <tr>\n            <td style=\"padding:6px 8px;border:1px solid #ddd;\">${esc(r.technicien)}</td>\n            <td style=\"padding:6px 8px;border:1px solid #ddd;text-align:right;\">${esc(r.ticketsAffectes)}</td>\n            <td style=\"padding:6px 8px;border:1px solid #ddd;text-align:right;\">${esc(r.slaLate)}</td>\n            <td style=\"padding:6px 8px;border:1px solid #ddd;text-align:right;\">${esc(r.scoreTraitement)}%</td>\n          </tr>\n        `).join(\"\")}\n      </tbody>\n    </table>\n  `;\n}\n\nconst notesHtml = notes.length\n  ? `\n    <div style=\"margin-top:12px;padding:10px;border:1px solid #eee;background:#fafafa;\">\n      <b>Notes</b>\n      <ul style=\"margin:6px 0 0;padding-left:18px;\">\n        ${notes.map(n => `<li>${esc(n)}</li>`).join(\"\")}\n      </ul>\n    </div>\n  `\n  : \"\";\n\n// --------------------------------------------------\n// 7) Sortie finale\n// --------------------------------------------------\n\nconst subject = `Rapport GLPI - ${dateISO} (Tickets: ${totalTickets})`;\n\nconst html = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;max-width:900px;margin:0 auto;\">\n  <h2 style=\"margin:0 0 8px;\">Rapport journalier GLPI – ${esc(dateISO)}</h2>\n\n  <table style=\"border-collapse:collapse;width:100%;font-size:13px;\">\n    <thead>\n      <tr style=\"background:#f8f9fa;\">\n        <th style=\"text-align:left;padding:6px 8px;border:1px solid #ddd;\">Indicateur</th>\n        <th style=\"text-align:right;padding:6px 8px;border:1px solid #ddd;\">Valeur</th>\n        <th style=\"text-align:left;padding:6px 8px;border:1px solid #ddd;\">Détail</th>\n      </tr>\n    </thead>\n    <tbody>\n      ${kpiRow(\"Total tickets\", totalTickets, \"Somme des statuts\")}\n      ${kpiRow(\"Tickets affectés\", affectes, \"Statut affecté\")}\n      ${kpiRow(\"Tickets en cours\", enCours, \"Statut en cours\")}\n      ${kpiRow(\"Tickets en attente\", enAttente, \"Statut en attente\")}\n      ${kpiRow(\"Tickets résolus\", resolus, \"Statut résolu\")}\n      ${kpiRow(\"Taux de résolution\", `${tauxResolution}%`, \"Résolus / Total\")}\n      ${kpiRow(\"SLA dépassés\", slaDepasses, \"Basé sur is_late=1 si données disponibles (48h)\")}\n      ${kpiRow(\"Backlog > 7 jours\", backlogPlus7j, \"Ancienneté >7j (différent de SLA)\")}\n      ${kpiRow(\"Techniciens avec tickets\", techRows.length, \"Tickets affectés > 0\")}\n    </tbody>\n  </table>\n\n  ${\n    techRows.length\n      ? techTable(techRows)\n      : `<div style=\"margin-top:12px;color:#666;font-size:12px;\">Aucun technicien avec ticket affecté pour cette journée.</div>`\n  }\n\n  ${notesHtml}\n\n  <div style=\"margin-top:14px;color:#999;font-size:12px;\">Généré automatiquement par n8n.</div>\n</div>\n`;\n\nconst text = `\nRapport GLPI - ${dateISO}\nTotal tickets: ${totalTickets}\nAffectés: ${affectes}\nEn cours: ${enCours}\nEn attente: ${enAttente}\nRésolus: ${resolus}\nTaux de résolution: ${tauxResolution}%\nSLA dépassés: ${slaDepasses}\nBacklog > 7 jours: ${backlogPlus7j}\n\nTechniciens:\n${techRows.map(t => `- ${t.technicien}: ${t.ticketsAffectes} ticket(s)`).join(\"\\n\")}\n`.trim();\n\nreturn [\n  {\n    json: {\n      subject,\n      html,\n      text,\n      date: dateISO,\n      statut,\n      totalTickets,\n      tauxResolution,\n      slaDepasses,\n      backlogPlus7j,\n      techniciensCount: techRows.length,\n      techniciens: techRows\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        336
+      ],
+      "id": "6abbd331-5a5f-4b1a-9c66-db1afbd43f8c",
+      "name": "Générer Rapport Complet1"
+    },
+    {
+      "parameters": {
+        "jsCode": "{\n  \"nodes\": [\n    {\n      \"parameters\": {\n        \"jsCode\": \"/**\\n * GÉNÉRER RAPPORT GLPI\\n * Version robuste\\n * Supporte plusieurs formats en entrée :\\n * - { date, statut, totalTickets, notes, slaDepasses, backlogPlus7j }\\n * - { statsTechniciens: [...] }\\n * - items séparés : { id, nom, ticketsAffectes, ... }\\n * - { enCours, enAttente, affectes, resolus }\\n */\\n\\nconst items = $input.all() ?? [];\\n\\nfunction esc(s) {\\n  return String(s ?? \\\"\\\")\\n    .replaceAll(\\\"&\\\", \\\"&amp;\\\")\\n    .replaceAll(\\\"<\\\", \\\"&lt;\\\")\\n    .replaceAll(\\\">\\\", \\\"&gt;\\\")\\n    .replaceAll('\\\"', \\\"&quot;\\\")\\n    .replaceAll(\\\"'\\\", \\\"&#039;\\\");\\n}\\n\\nfunction toInt(v, def = 0) {\\n  const n = typeof v === \\\"number\\\" ? v : parseInt(String(v ?? \\\"\\\"), 10);\\n  return Number.isFinite(n) ? n : def;\\n}\\n\\nfunction safeArr(v) {\\n  return Array.isArray(v) ? v : [];\\n}\\n\\nfunction pickFirst(predicate) {\\n  return items.find(i => {\\n    try {\\n      return predicate(i?.json ?? {});\\n    } catch {\\n      return false;\\n    }\\n  })?.json ?? null;\\n}\\n\\n// --------------------------------------------------\\n// 1) Récupération DATE / NOTES / TOTAL\\n// --------------------------------------------------\\n\\nconst aggregateItem =\\n  pickFirst(j =>\\n    j.date ||\\n    j.totalTickets ||\\n    j.notes ||\\n    j.statut ||\\n    j.slaDepasses ||\\n    j.backlogPlus7j\\n  ) || {};\\n\\nconst dateISO = aggregateItem.date || new Date().toISOString().slice(0, 10);\\nconst notes = safeArr(aggregateItem.notes);\\n\\n// --------------------------------------------------\\n// 2) Récupération STATUT\\n// --------------------------------------------------\\n\\nconst statutItem =\\n  (aggregateItem.statut ? aggregateItem.statut : null) ||\\n  pickFirst(j =>\\n    \\\"enCours\\\" in j ||\\n    \\\"enAttente\\\" in j ||\\n    \\\"affectes\\\" in j ||\\n    \\\"resolus\\\" in j\\n  ) ||\\n  {};\\n\\nconst statut = {\\n  enCours: toInt(statutItem.enCours, 0),\\n  enAttente: toInt(statutItem.enAttente, 0),\\n  affectes: toInt(statutItem.affectes, 0),\\n  resolus: toInt(statutItem.resolus, 0),\\n};\\n\\n// Total tickets\\nconst totalTickets =\\n  toInt(aggregateItem.totalTickets, 0) ||\\n  (statut.enCours + statut.enAttente + statut.affectes + statut.resolus);\\n\\n// --------------------------------------------------\\n// 3) KPI supplémentaires\\n// --------------------------------------------------\\n\\n// Cherche SLA dépassés\\nconst slaItem =\\n  pickFirst(j => \\\"slaDepasses\\\" in j) ||\\n  pickFirst(j => \\\"ticketsSLADepasses\\\" in j) ||\\n  pickFirst(j => \\\"count\\\" in j && \\\"data\\\" in j) ||\\n  {};\\n\\nlet slaDepasses = toInt(aggregateItem.slaDepasses, NaN);\\n\\nif (!Number.isFinite(slaDepasses)) {\\n  slaDepasses = toInt(slaItem.slaDepasses, NaN);\\n}\\n\\nif (!Number.isFinite(slaDepasses)) {\\n  slaDepasses = toInt(slaItem.ticketsSLADepasses, NaN);\\n}\\n\\n// si node SLA renvoie un count\\nif (!Number.isFinite(slaDepasses) && Array.isArray(slaItem.data)) {\\n  slaDepasses = toInt(slaItem.count, 0);\\n}\\n\\nif (!Number.isFinite(slaDepasses)) {\\n  slaDepasses = 0;\\n}\\n\\n// Cherche backlog > 7 jours\\nconst backlogItem =\\n  pickFirst(j => \\\"backlogPlus7j\\\" in j) ||\\n  pickFirst(j => \\\"backlog7j\\\" in j) ||\\n  pickFirst(j => \\\"anciensTickets\\\" in j) ||\\n  {};\\n\\nlet backlogPlus7j = toInt(aggregateItem.backlogPlus7j, NaN);\\n\\nif (!Number.isFinite(backlogPlus7j)) {\\n  backlogPlus7j = toInt(backlogItem.backlogPlus7j, NaN);\\n}\\n\\nif (!Number.isFinite(backlogPlus7j)) {\\n  backlogPlus7j = toInt(backlogItem.backlog7j, NaN);\\n}\\n\\nif (!Number.isFinite(backlogPlus7j)) {\\n  backlogPlus7j = toInt(backlogItem.anciensTickets, 0);\\n}\\n\\n// --------------------------------------------------\\n// 4) Récupération TECHNICIENS\\n// --------------------------------------------------\\n\\nconst statsTechItem = pickFirst(j => Array.isArray(j.statsTechniciens));\\nconst techStatsItem = pickFirst(j => Array.isArray(j.techniciensStats));\\n\\nconst flatTechItems = items\\n  .map(i => i.json || {})\\n  .filter(j => \\\"ticketsAffectes\\\" in j && (\\\"nom\\\" in j || \\\"id\\\" in j));\\n\\nlet rawTechniciens = [];\\n\\nif (statsTechItem?.statsTechniciens) {\\n  rawTechniciens = statsTechItem.statsTechniciens;\\n} else if (techStatsItem?.techniciensStats) {\\n  rawTechniciens = techStatsItem.techniciensStats;\\n} else if (flatTechItems.length) {\\n  rawTechniciens = flatTechItems;\\n}\\n\\nconst techRows = rawTechniciens\\n  .map(t => ({\\n    technicien:\\n      t.fullName ||\\n      t.technicien ||\\n      t.nom ||\\n      `${t.firstname ?? \\\"\\\"} ${t.realname ?? \\\"\\\"}`.trim() ||\\n      `ID ${t.id ?? t.technicienId ?? \\\"\\\"}`,\\n    technicienId: t.id ?? t.technicienId ?? \\\"\\\",\\n    ticketsAffectes: toInt(t.ticketsAffectes, 0),\\n    slaLate: toInt(t.slaLate ?? t.ticketsSLADepasses, 0),\\n    scoreTraitement: toInt(t.scoreTraitement ?? t.scorePerformance, 0),\\n    firstname: t.firstname ?? \\\"\\\",\\n    realname: t.realname ?? \\\"\\\",\\n    fullName: t.fullName ?? \\\"\\\"\\n  }))\\n  .filter(t => t.ticketsAffectes > 0)\\n  .sort((a, b) => b.ticketsAffectes - a.ticketsAffectes);\\n\\n// --------------------------------------------------\\n// 5) KPI principaux\\n// --------------------------------------------------\\n\\nconst resolus = statut.resolus;\\nconst affectes = statut.affectes;\\nconst enCours = statut.enCours;\\nconst enAttente = statut.enAttente;\\n\\nconst tauxResolution = totalTickets > 0\\n  ? Math.round((resolus / totalTickets) * 1000) / 10\\n  : 0;\\n\\n// --------------------------------------------------\\n// 6) HTML helpers\\n// --------------------------------------------------\\n\\nfunction kpiRow(label, value, hint = \\\"\\\") {\\n  return `\\n    <tr>\\n      <td style=\\\"padding:6px 8px;border:1px solid #ddd;\\\">${esc(label)}</td>\\n      <td style=\\\"padding:6px 8px;border:1px solid #ddd;text-align:right;\\\"><b>${esc(value)}</b></td>\\n      <td style=\\\"padding:6px 8px;border:1px solid #ddd;color:#666;\\\">${esc(hint)}</td>\\n    </tr>\\n  `;\\n}\\n\\nfunction techTable(rows) {\\n  return `\\n    <h3 style=\\\"margin:16px 0 8px;\\\">Tickets affectés par technicien — ${esc(dateISO)}</h3>\\n    <table style=\\\"border-collapse:collapse;width:100%;font-size:13px;\\\">\\n      <thead>\\n        <tr style=\\\"background:#f8f9fa;\\\">\\n          <th style=\\\"text-align:left;padding:6px 8px;border:1px solid #ddd;\\\">Technicien</th>\\n          <th style=\\\"text-align:right;padding:6px 8px;border:1px solid #ddd;\\\">Tickets affectés</th>\\n          <th style=\\\"text-align:right;padding:6px 8px;border:1px solid #ddd;\\\">SLA late</th>\\n          <th style=\\\"text-align:right;padding:6px 8px;border:1px solid #ddd;\\\">Score traitement</th>\\n        </tr>\\n      </thead>\\n      <tbody>\\n        ${rows.map(r => `\\n          <tr>\\n            <td style=\\\"padding:6px 8px;border:1px solid #ddd;\\\">${esc(r.technicien)}</td>\\n            <td style=\\\"padding:6px 8px;border:1px solid #ddd;text-align:right;\\\">${esc(r.ticketsAffectes)}</td>\\n            <td style=\\\"padding:6px 8px;border:1px solid #ddd;text-align:right;\\\">${esc(r.slaLate)}</td>\\n            <td style=\\\"padding:6px 8px;border:1px solid #ddd;text-align:right;\\\">${esc(r.scoreTraitement)}%</td>\\n          </tr>\\n        `).join(\\\"\\\")}\\n      </tbody>\\n    </table>\\n  `;\\n}\\n\\nconst notesHtml = notes.length\\n  ? `\\n    <div style=\\\"margin-top:12px;padding:10px;border:1px solid #eee;background:#fafafa;\\\">\\n      <b>Notes</b>\\n      <ul style=\\\"margin:6px 0 0;padding-left:18px;\\\">\\n        ${notes.map(n => `<li>${esc(n)}</li>`).join(\\\"\\\")}\\n      </ul>\\n    </div>\\n  `\\n  : \\\"\\\";\\n\\n// --------------------------------------------------\\n// 7) Sortie finale\\n// --------------------------------------------------\\n\\nconst subject = `Rapport GLPI - ${dateISO} (Tickets: ${totalTickets})`;\\n\\nconst html = `\\n<div style=\\\"font-family:Arial,Helvetica,sans-serif;max-width:900px;margin:0 auto;\\\">\\n  <h2 style=\\\"margin:0 0 8px;\\\">Rapport journalier GLPI – ${esc(dateISO)}</h2>\\n\\n  <table style=\\\"border-collapse:collapse;width:100%;font-size:13px;\\\">\\n    <thead>\\n      <tr style=\\\"background:#f8f9fa;\\\">\\n        <th style=\\\"text-align:left;padding:6px 8px;border:1px solid #ddd;\\\">Indicateur</th>\\n        <th style=\\\"text-align:right;padding:6px 8px;border:1px solid #ddd;\\\">Valeur</th>\\n        <th style=\\\"text-align:left;padding:6px 8px;border:1px solid #ddd;\\\">Détail</th>\\n      </tr>\\n    </thead>\\n    <tbody>\\n      ${kpiRow(\\\"Total tickets\\\", totalTickets, \\\"Somme des statuts\\\")}\\n      ${kpiRow(\\\"Tickets affectés\\\", affectes, \\\"Statut affecté\\\")}\\n      ${kpiRow(\\\"Tickets en cours\\\", enCours, \\\"Statut en cours\\\")}\\n      ${kpiRow(\\\"Tickets en attente\\\", enAttente, \\\"Statut en attente\\\")}\\n      ${kpiRow(\\\"Tickets résolus\\\", resolus, \\\"Statut résolu\\\")}\\n      ${kpiRow(\\\"Taux de résolution\\\", `${tauxResolution}%`, \\\"Résolus / Total\\\")}\\n      ${kpiRow(\\\"SLA dépassés\\\", slaDepasses, \\\"Basé sur is_late=1 si données disponibles (48h)\\\")}\\n      ${kpiRow(\\\"Backlog > 7 jours\\\", backlogPlus7j, \\\"Ancienneté >7j (différent de SLA)\\\")}\\n      ${kpiRow(\\\"Techniciens avec tickets\\\", techRows.length, \\\"Tickets affectés > 0\\\")}\\n    </tbody>\\n  </table>\\n\\n  ${\\n    techRows.length\\n      ? techTable(techRows)\\n      : `<div style=\\\"margin-top:12px;color:#666;font-size:12px;\\\">Aucun technicien avec ticket affecté pour cette journée.</div>`\\n  }\\n\\n  ${notesHtml}\\n\\n  <div style=\\\"margin-top:14px;color:#999;font-size:12px;\\\">Généré automatiquement par n8n.</div>\\n</div>\\n`;\\n\\nconst text = `\\nRapport GLPI - ${dateISO}\\nTotal tickets: ${totalTickets}\\nAffectés: ${affectes}\\nEn cours: ${enCours}\\nEn attente: ${enAttente}\\nRésolus: ${resolus}\\nTaux de résolution: ${tauxResolution}%\\nSLA dépassés: ${slaDepasses}\\nBacklog > 7 jours: ${backlogPlus7j}\\n\\nTechniciens:\\n${techRows.map(t => `- ${t.technicien}: ${t.ticketsAffectes} ticket(s)`).join(\\\"\\\\n\\\")}\\n`.trim();\\n\\nreturn [\\n  {\\n    json: {\\n      subject,\\n      html,\\n      text,\\n      date: dateISO,\\n      statut,\\n      totalTickets,\\n      tauxResolution,\\n      slaDepasses,\\n      backlogPlus7j,\\n      techniciensCount: techRows.length,\\n      techniciens: techRows\\n    }\\n  }\\n];\"\n      },\n      \"type\": \"n8n-nodes-base.code\",\n      \"typeVersion\": 2,\n      \"position\": [\n        672,\n        464\n      ],\n      \"id\": \"6abbd331-5a5f-4b1a-9c66-db1afbd43f8c\",\n      \"name\": \"Générer Rapport Complet1\"\n    }\n  ],\n  \"connections\": {},\n  \"pinData\": {},\n  \"meta\": {\n    \"templateCredsSetupCompleted\": true,\n    \"instanceId\": \"__REDACTED_INSTANCE_ID__\"\n  }\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -448,
+        352
+      ],
+      "id": "84919568-625a-4132-812e-1d0bf839b22c",
+      "name": "Générer Rapport Complet2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "InitSession",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "InitSession": {
+      "main": [
+        [
+          {
+            "node": "GET Équipes Support",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LIST TICKET EN COURS",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LIST TICKET EN ATTENT",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LIST TICKET AFFECTTE",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GET Tickets Résolus",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GET Tickets Critiques",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GET Tickets SLA Dépassés",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LIST TICKET AFFECTTE PAR USER",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GET Tickets Backlog >7j",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "COUNT Urgence 4 (Haute)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "COUNT Urgence 3 (Moyenne)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "COUNT Priorité 5 (Critique)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "COUNT Priorité 4 (Haute)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Trouver Groupe Support",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge Stats3",
+            "type": "main",
+            "index": 9
+          }
+        ]
+      ]
+    },
+    "GET Équipes Support": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats3",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "LIST TICKET EN COURS": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LIST TICKET EN ATTENT": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "LIST TICKET AFFECTTE": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "GET Tickets Résolus": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "GET Tickets Critiques": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LIST TICKET AFFECTTE PAR USER": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Stats": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agréger Statistiques": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyser Techniciens": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Générer Rapport Complet": {
+      "main": [
+        [
+          {
+            "node": "Envoyer Rapport Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoyer Rapport Email": {
+      "main": [
+        [
+          {
+            "node": "Fermer Session GLPI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET Tickets SLA Dépassés": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats1",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge Stats2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge Stats3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "GET Tickets Backlog >7j": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats3",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "COUNT Urgence 4 (Haute)": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats3",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "COUNT Urgence 3 (Moyenne)": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats3",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "COUNT Priorité 5 (Critique)": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats3",
+            "type": "main",
+            "index": 7
+          }
+        ]
+      ]
+    },
+    "COUNT Priorité 4 (Haute)": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats3",
+            "type": "main",
+            "index": 8
+          }
+        ]
+      ]
+    },
+    "Trouver Groupe Support": {
+      "main": [
+        [
+          {
+            "node": "liste des profiles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Stats1": {
+      "main": [
+        [
+          {
+            "node": "Générer Rapport Complet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Stats2": {
+      "main": [
+        [
+          {
+            "node": "Analyser Techniciens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Stats3": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats4",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Stats4": {
+      "main": [
+        [
+          {
+            "node": "Agréger Statistiques",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "liste des profiles": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats3",
+            "type": "main",
+            "index": 4
+          },
+          {
+            "node": "Merge Stats5",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge Stats1",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge Stats5": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}
